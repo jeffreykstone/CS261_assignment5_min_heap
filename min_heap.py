@@ -1,7 +1,13 @@
 # Course: CS261 - Data Structures
 # Assignment: 5
-# Student:
-# Description:
+# Student: Jeff Stone - - 934256195
+# Description: This program implements a MinHeap class by implementing
+# the following methods:
+# add()
+# get_min()
+# remove_min()
+# build_heap()
+
 
 
 # Import pre-written DynamicArray and LinkedList classes
@@ -44,29 +50,117 @@ class MinHeap:
         """
         return self.heap.length() == 0
 
+    def parent(self, index):
+        """
+        This method sets the parent of a node
+        :param: index of the node
+        :return: returns the computed elements parental index
+        """
+        return (index - 1) // 2
+
+    def left(self, index):
+        """
+        This method moves element to the left
+        :param index: the index of the element
+        :return: stores the element left
+        """
+        return 1 + index*2
+
+    def right(self, index):
+        """
+        This method moves element to the right
+        :param index: the index of the element
+        :return: stores the element right
+        """
+        return 2 + index*2
+
+    def to_root(self, i):
+        """
+        This method "bubbles up" the heap from an index to the root
+        :param i: the current position as we iterate up the heap
+        """
+        while i > 0:
+            if self.heap.get_at_index(i) < self.heap.get_at_index(self.parent(i)):
+                self.heap.swap(i, self.parent(i))
+            i = self.parent(i)
+
+    def to_leaf(self, i):
+        """
+        This method "percolates down" the heap from an index to the leaf
+        :param i: the current position as we iterate down the heap
+        """
+        while i < self.heap.length():
+            left = self.left(i)
+            right = self.right(i)
+
+            # determines if next element goes left or right
+            child = None
+            val = self.heap.get_at_index(i)
+            if left < self.heap.length() and val > self.heap.get_at_index(left):
+                child = left
+                val = self.heap.get_at_index(left)
+            if right < self.heap.length() and val > self.heap.get_at_index(right):
+                child = right
+                val = self.heap.get_at_index(right)
+
+            if child is not None:
+                self.heap.swap(i, child)
+                i = child
+
+            else:
+                break
+
     def add(self, node: object) -> None:
         """
-        TODO: Write this implementation
+        This method adds a new object to the MinHeap maintaining heap property.
+        Runtime complexity of this implementation is O(logN).
+        :param node: the object added to the MinHeap
         """
-        pass
+        self.heap.append(node)
+        self.to_root(self.heap.length() - 1)
 
     def get_min(self) -> object:
         """
-        TODO: Write this implementation
+        This method returns an object with a minimum key without removing it from the heap.
+        If the heap is empty, the method raises a MinHeapException.
+        Runtime complexity of this implementation is O(1).
+        :return: returns an object with a min key
         """
-        return None
+        if self.is_empty():
+            raise MinHeapException()
+
+        return self.heap.get_at_index(0)
 
     def remove_min(self) -> object:
         """
-        TODO: Write this implementation
+        This method returns an object with a minimum key and removes it from the heap.
+        If the heap is empty, the method raises a MinHeapException.
+        Runtime complexity of this implementation is O(logN).
+        :return: returns an object with a min key that is removed from heap
         """
-        return None
+        if self.is_empty():
+            raise MinHeapException()
+        val = self.heap.get_at_index(0)
+        lastval = self.heap.pop()
+
+        if self.heap.length() == 0:
+            return val
+
+        self.heap.set_at_index(0, lastval)
+        self.to_leaf(0)
+
+        return val
 
     def build_heap(self, da: DynamicArray) -> None:
         """
-        TODO: Write this implementation
+        This method receives a dynamic array with objects in any order
+        and builds a proper MinHeap from them.
+        The current content of the MinHeap is lost.
+        Runtime complexity of this implementation is O(N).
         """
-        pass
+        self.heap = DynamicArray()
+        for i in range(da.length()):
+            self.add(da.get_at_index(i))
 
 
 # BASIC TESTING
