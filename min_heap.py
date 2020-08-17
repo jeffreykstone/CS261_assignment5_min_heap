@@ -1,6 +1,6 @@
 # Course: CS261 - Data Structures
 # Assignment: 5
-# Student: Jeff Stone - - 934256195
+# Student: Jeff Stone 
 # Description: This program implements a MinHeap class by implementing
 # the following methods:
 # add()
